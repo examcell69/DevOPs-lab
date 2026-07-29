@@ -1,0 +1,27 @@
+name: Validate Files
+
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check if files exist and are not empty
+        run: |
+          for file in index.html style.css script.js; do
+            if [ -s "$file" ]; then
+              echo "OK: $file exists and is not empty."
+            else
+              echo "ERROR: $file is missing or empty!"
+              exit 1
+            fi
+          done
